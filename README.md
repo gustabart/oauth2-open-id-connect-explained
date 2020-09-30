@@ -56,7 +56,7 @@ Los otros flujos suelen ser derivaciones del primero y sólo dedicaremos un parr
 
 ## Authorization Code Flow
 
-Este flujo está optimizado para clientes confidenciales. Es decir, clientes que corren en un backend server y por lo tanto pueden asegurar la confidencialidad de claves. Este flujo se basa en redirecciones, por lo tanto el cliente debe ser capaz de interactuar con el user-agent del usuario enviandole respuestas con código de estado 302 y aceptando requests (vía redirecciones) del servidor de autorizacón.
+Este flujo está optimizado para clientes confidenciales. Es decir, clientes que corren en un backend server y por lo tanto se supone pueden asegurar la confidencialidad de claves. Este flujo se basa en redirecciones, esto signifia que el cliente debe ser capaz de interactuar con el user-agent del usuario enviandole respuestas HTTP con código de estado 302 y aceptando requests (vía redirecciones) del servidor de autorizacón.
 
 [TODO - GRAFICO]
 
@@ -69,125 +69,129 @@ Este flujo está optimizado para clientes confidenciales. Es decir, clientes que
    
    En verdad la especificaciòn no dice nada sobre este request, lo incluimos simplemente para que quede claro como se inicia el flujo.
  
-2- El cliente encuentra que el usuario no tiene sesión y entonces redirije a la uri authorization de facebook mediante el user-agent.
+2- El cliente encuentra que el usuario no tiene sesión y entonces redirije a la uri de autorización de facebook mediante el user-agent.
     Genera entonces una resuesta de esta forma:
-
+   
+   ```http
    HTTP/1.1 302 Found
    Location: https://www.facebook.com/v2.8/dialog/oauth?
 					response_type=code
 					&client_id=greeting-id
 					&state=xyz
 					&redirect_uri=https://www.birthday.greeting.com/login/oauth2/code/daut 
+   ```
    
-   El parametro redirect_uri funciona como un callback que el servidor de autorización usará en el paso siguiente.
+   El parametro **redirect_uri** funciona como un callback que el servidor de autorización usará en el paso siguiente.
    
-   Además la respuesta suele incluir el Set-Cookie header para trazar la sesión en futuros requests (esto esta fuera del alcance del protocolo):
+   Además la respuesta suele incluir el **Set-Cookie header** para trazar la sesión en futuros requests (esto esta fuera del alcance del protocolo):
    
    Set-Cookie: JSESSIONID=DDE82AA1997A6179EA8F566D202D8C8E; Path=/; HttpOnly
  
-3- El servidor de autenticación recibe el request de autorización y presenta una pàgina de login al usuario.
+3- El servidor de autorización recibe el authorization request y responde con un página de login.  
    El usuario se autentica con exito y otorga consentimiento para que el cliente acceda a sus recursos (o un subconjunto de ellos).
 
-4- El servidor de autorización responde con una redirección mediante el user-agent.
-	La url de redirección es el redirect_uri suminstrado por el cliente en el paso anterior. Además anexa a la misma un còdigo de autorización:	
-	
-     HTTP/1.1 302 Found
-     Location: https://www.birthday.greeting.com/login/oauth2/code/daut?code=SplxlOBeZQQYbYS6WxSbIA&state=xyz	
+4- Recibido la autorización del usuario, el servidor de autorización responde con una redirección vía user-agent.  
+   La url de redirección es el redirect_uri suminstrado por el cliente en el paso anterior. Además anexa a la misma un còdigo de autorización:
 
-5- Con el código recibido en el paso anterior, el cliente solicita ahora un access token al servidor de autorización mediante una petición de tipo POST.
+   ```http
+   HTTP/1.1 302 Found
+   Location: https://www.birthday.greeting.com/login/oauth2/code/daut?code=SplxlOBeZQQYbYS6WxSbIA&state=xyz
+   ```
 
-     POST /v2.8/oauth/token HTTP/1.1
-     Host: https://www.facebook.com
-     Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
-     Content-Type: application/x-www-form-urlencoded
+5- Con el código recibido, el cliente solicita ahora un access token al servidor de autorización mediante una petición de tipo POST.
 
-     grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
-     &redirect_uri=https://www.birthday.greeting.com/login/oauth2/code/daut
+   ```http
+   POST /v2.8/oauth/token HTTP/1.1
+   Host: https://www.facebook.com
+   Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
+   Content-Type: application/x-www-form-urlencoded
 
-     En el Authorization header se deben indicar un token que representa el client-id y client-secret codificados en base64.	 
+   grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA&redirect_uri=https://www.birthday.greeting.com/login/oauth2/code/daut
+   ```
+   El Authorization header debe indicar el par client-id:client-secret codificados en base64.	 
 
-6- El servidor de autorización verifica que todos los datos de la petición sean válidos y responde con un access token.
-    Opcionalmente también puede responder un refresh token:
-	 
-	 HTTP/1.1 200 OK
-     Content-Type: application/json;charset=UTF-8
-     Cache-Control: no-store
-     Pragma: no-cache
+6- El servidor de autorización verifica que todos los datos de la petición sean válidos y responde el access token.
+   Opcionalmente también puede responder un refresh token:
+   
+   ```http
+   HTTP/1.1 200 OK
+   Content-Type: application/json;charset=UTF-8
+   Cache-Control: no-store
+   Pragma: no-cache
 
-     {
-       "access_token":"2YotnFZFEjr1zCsicMWpAA",
-       "token_type":"example",
-       "expires_in":3600,
-       "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
-       "example_parameter":"example_value"
-	   "id_token": "JWT Token si además el servidor de autenticación es Open ID Connect"
-     }
+   {
+     "access_token":"2YotnFZFEjr1zCsicMWpAA",
+     "token_type":"example",
+     "expires_in":3600,
+     "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
+     "example_parameter":"example_value"
+     "id_token": "tGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIA"
+   }
+   ```
+   
+   **El id_token sólo se incluye sólo si el servidor de autorización implementa tambièn Open ID Connect.**
 
-7- (Open ID Connect) El cliente hace un request al UserInfo Endpoint del servidor de recursos.
+7- (Open ID Connect) El cliente hace un request al UserInfo Endpoint del servidor de recursos.  
     Como se trata de una solcitud de recurso el cliente debe indicar el access token en la petición:
 	
+   ```http	
    GET /me?fields=id,name,email HTTP/1.1
    Host: https://graph.facebook.com 	
    Authorization: Bearer czZCaGRSa3F0MzpnWDFmQmF0M2JW
-	
+   ```
+
 8- (Open ID Connect) El servidor de autorizacion responde en un documento JSON la información de usuario:
 
-  HTTP/1.1 200 OK
-  Content-Type: application/json
+   ```http
+   HTTP/1.1 200 OK
+   Content-Type: application/json
 
-  {
-   "sub": "248289761001",
-   "name": "Jane Doe",
-   "given_name": "Jane",
-   "family_name": "Doe",
-   "preferred_username": "j.doe",
-   "email": "janedoe@example.com",
-   "picture": "http://example.com/janedoe/me.jpg"
-  }
+   {
+    "sub": "248289761001",
+    "name": "Jane Doe",
+    "given_name": "Jane",
+    "family_name": "Doe",
+    "preferred_username": "j.doe",
+    "email": "janedoe@example.com",
+    "picture": "http://example.com/janedoe/me.jpg"
+   }
+   ```
     
-Cumplido este flujo de autorizacion (y autenticación si hablamos de Open ID Connect), la aplicación cliente ya posee todo lo necesario (el access token)
-para obener recursos del resource server de forma segura. 
+Cumplido este flujo de autorizacion (y autenticación si hablamos de Open ID Connect), la aplicación cliente ya posee todo lo necesario (el access token) para obener recursos del resource server de forma segura. 
 
 GRAFICO
 
-Ahora cada vez que el usuario hace un request al cliente desde el User-Agent, este encuentra una session asociada (tipicamente por una cookie que envía el user-agent)
-y de ser necesario puede hacer requests al servidor de recursos incluyendo siempre el access token. El Resource Server antes atender el pedido debe verificar la validez del access token; 
-como lleva a cabo esta verificación esta afuera del alcance de la especificaciòn.
+Ahora cada vez que el usuario hace un request al cliente desde el User-Agent, este encuentra una session asociada (tipicamente por una cookie que envía el user-agent) y en caso de necesitarlo puede hacer requests al servidor de recursos incluyendo siempre el access token. El servidor de recursos antes atender el pedido debe verificar la validez del access token; como lleva a cabo esta verificación esta afuera del alcance de la especificación.
 
 ### Back Channel y Front Channel
 
+[TODO]
+
 ## Implicit
 
-Hay situaciones donde el cliente sólo funciona en el user-agent (es decir, no tiene posibilidad de usar el back channel). Hablamos bàsicamente de aplicaciones HTML y Javascript puras 
-(o derivados como Typescript, Angular, React, etc.). Este flujo entonces omite el intercambio de còdigos; el cliente envìa su client-id y secret en el primer request al servidor de autorización
-y este responde directamente con el access token (previo consentimiento del usuario final por supuesto).
+Hay situaciones donde el cliente sólo funciona en el user-agent (es decir, no tiene posibilidad de usar el back channel). Hablamos bàsicamente de aplicaciones HTML y Javascript puras (o derivados como Typescript, Angular, React, etc.). Este flujo entonces omite el intercambio del código de autorización; el cliente envía su client-id y secret en el primer request al servidor de autorización y este responde directamente con el access token (previo consentimiento del usuario final por supuesto).
 
 ## Resource Owner password credentials
 
-Este flujo puede darse en situaciones donde el resource owner tiene plena confianza en el cliente y entonces le brinda sus credenciales.
-Podrìa ser por ejemplo el sistema operativo de un dispositivo móbil. El cliente entonces interactùa directamente en el back channel con el servidor de autorización 
-para obtener el access token. Su uso es desaconsejado. 
+Este flujo puede darse en situaciones donde el dueño del recurso tiene plena confianza en el cliente y entonces le brinda sus credenciales.  
+Podrìa ser por ejemplo el sistema operativo de un dispositivo móvil. El cliente entonces interactùa directamente en el back channel con el servidor de autorización para obtener el access token. Su uso es desaconsejado. 
 
 ## Client Credentials
  
-Como en el caso anterior la interacción ocurre sólo en el back channel. Tiene sentido en situaciones de comunicación maquina a maquina. 
-En este flujo el cliente simple envìa sus credenciales al cliente y este responde el access token. No participa o no tiene sentido la figura del resource owner.  
+Como en el caso anterior la interacción ocurre sólo en el back channel. Tiene sentido en situaciones de comunicación maquina a maquina. En este flujo el cliente simplemente envìa sus credenciales al servidor de autorización y este responde el access token. No participa o no tiene sentido la figura de dueño del recurso.  
 
 ## Access Token
 
-Un Access Token es la credencial que le permite al cliente acceder a recursos protegidos. Consiste en un string que usualmente no es legible para el cliente.
-Cualquier estructura, formato o contenido adicional que se le quiera dar al access token esta fuera del alcance de la especificacion de OAuth2.
-Muchos sistemas que implementaron OAuth2 usaron el access token además para transmitir información del usuario y sus roles o capacidades.
-Con el objetivo de ordenar las cosas y cumplir con esta necesidad es que aparece Open ID Connect. Dicha extensiòn propone un nuevo token 
-estandarizado denominado ID Token. 
+Un Access Token es la llave que le permite al cliente acceder a recursos protegidos. Consiste en un string que no suele ser legible para el cliente. Cualquier estructura, formato o contenido adicional que se le quiera dar al access token esta fuera del alcance de la especificacion de OAuth2. Muchos sistemas que implementaron OAuth2 usaron el access token además para transmitir información del usuario y sus roles o capacidades. Con el objetivo de ordenar las cosas y cumplir con esta necesidad es que aparece Open ID Connect. Dicha extensiòn propone un nuevo token estandarizado denominado ID Token.
 
 Mas información sobre el Access Token aquí.
 
 ## ID Token
 
-El ID Token es representado como un JSON Web Token (JWT) y contiene de manera estandarizada información que identifica al usuario.
+El ID Token es representado como un JSON Web Token (JWT) y contiene de manera estandarizada información que identifica al usuario.  
 Tipicamente un ID Token tiene esta estructura:
 
+```
 (Heders: Info sobre la segurizaciòn del token)
 .
   {
@@ -202,6 +206,7 @@ Tipicamente un ID Token tiene esta estructura:
   }
 .
 (Signature)
+```
 
 Mas precisiones sobre el ID Token aquí.
 
