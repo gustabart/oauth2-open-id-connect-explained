@@ -1,8 +1,6 @@
-[DOCUMENTO EN ELABORACIÓN...]
-
 # OAuth2 y Open ID Connect
 
-Este documento busca describir de forma clara y precisa que es y como funciona OAuth2 y su extensión Open ID Connect. Pero de ninguna manera pretende ser una descipción pormenorizada y completa de los mismos. Para ello se debe recurrir a las especificaciones oficiales y/o demás referencias que se anexan al final de este documento.
+Este documento busca describir de forma clara y precisa que es y como funciona OAuth2 y su extensión Open ID Connect. Pero de ninguna manera pretende ser una descipción pormenorizada y completa de los mismos. Para ello se debe recurrir a las especificaciones oficiales y/o demás referencias que se anexan al final.
 
 **Tabla de contentidos:**
 1. [Introducción](#1-introducción)  
@@ -17,8 +15,7 @@ Este documento busca describir de forma clara y precisa que es y como funciona O
 3. [Access Token](#3-access-token)  
 4. [ID Token](#4-id-token)  
 5. [OAuth2 como SSO](#5-oauth2-como-sso)  
-6. [Miscelanias](#6-miscelanias)  
-7. [Referencias](#7-referencias)  
+6. [Referencias](#6-referencias)  
 
 ## 1. Introducción:
 
@@ -187,7 +184,7 @@ El servidor de autorizacion responde en un documento JSON la información de usu
     
 Cumplido este flujo de autorizacion (y autenticación si hablamos de Open ID Connect), la aplicación cliente ya posee todo lo necesario (el access token) para obener recursos del resource server de forma segura. 
 
-![Authorizacion Code Flow](images/resource-request.png "Authorization Code")
+![Resource Request](images/resource-request.png "Resource Request")
 
 Ahora cada vez que el usuario hace un request al cliente desde el User-Agent, este encuentra una session asociada (tipicamente por una cookie que envía el user-agent) y en caso de necesitarlo puede hacer requests al servidor de recursos incluyendo siempre el access token. El servidor de recursos antes atender el pedido debe verificar la validez del access token; como lleva a cabo esta verificación esta afuera del alcance de la especificación.
 
@@ -236,16 +233,21 @@ Mas precisiones sobre el ID Token: https://openid.net/specs/openid-connect-core-
 
 ## 5. OAuth2 como SSO
 
-[TODO]
+Supongamos ahora que somos una organización que brinda varios servicios, o aplicaciones, a sus usuarios. Queremos entonces que éste se autentique una única vez y pueda acceder libremente a las distintas aplicaciones. Esto es lo que se conoce como un Single Sign ON (SSO).
 
-## 6. Miscelanias:
-- OAuth2 esta definido unicamente para HTTP.  
-[TODO]
+Veámoslo graficamente suponiendo que estamos usando el flujo [Authorization Code Flow(#21-authorization-code-flow) en todas las aplicaciones:
 
-## 7. Referencias
-[TODO]
+![Single Sign ON](images/sso.png "Single Sign ON")
 
+Asumiendo que el usuario ya se autenticó para usar App 1, vemos que los pasos para iniciar sesión en App 2 son exactamente los mismos que vimos en [Authorization Code Flow](#21-authorization-code-flow), sólo que ahora el usuario no tiene que volver a ingresar sus credenciales. Cuando el aplicacion server recibe el request (2) se da cuenta que el usuario ya tiene sesion iniciada (porque le llega una cookie del user-agent seguramente) y entonces responde directamente con un código de autorización. Luego App 2 obtiene los tokens y listo.
 
+## 6. Referencias
 
+- [RFC 6749 - The OAuth 2.0 Authorization Framework](https://tools.ietf.org/html/rfc6749)
+- [OpenID Connect Core 1.0 incorporating errata set 1](https://openid.net/specs/openid-connect-core-1_0.html)
+- [What is the OAuth 2.0 Authorization Code Grant Type?](https://developer.okta.com/blog/2018/04/10/oauth-authorization-code-grant-type)
+- [OAuth 2 Simplified](https://aaronparecki.com/oauth-2-simplified/)
+- [OAuth 2.0 and OpenID Connect (in plain English)](https://youtu.be/996OiexHze0)
+- [QUÉ ES OAUTH 2](https://youtu.be/GeXbsMezj8s)
 
 
