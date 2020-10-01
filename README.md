@@ -7,8 +7,8 @@ Este documento busca describir de forma clara y precisa que es y como funciona O
 **Tabla de contentidos:**
 1. [Introducción](#1-introducción)  
    1.1. [Motivación](#11-motivación)  
-   1.2. [¿Que es OAuth2?](#12-¿que-es-oauth2?)  
-   1.3. [¿Como funciona?](#13-¿como-funciona?)  
+   1.2. [¿Que es OAuth2?](#12-que-es-oauth2)  
+   1.3. [¿Como funciona?](#13-como-funciona)  
 2. [Flujos](#2-flujos)  
    2.1. [Authorization Code Flow](#21-authorization-code-flow)  
    2.2. [Implicit](#22-implicit)  
