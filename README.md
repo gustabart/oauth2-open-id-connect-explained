@@ -8,7 +8,13 @@ Este documento busca describir de forma clara y precisa que es y como funciona O
 
 ## 1. Introducción:
 
-### 1.1. ¿ Que es OAuth2 ?
+### 1.1. Motivación
+
+Plantiemos el siguiente escenario. Supongamos que queremos desarrollar una aplicación web que envía saludos de cumpleaños a tus contactos de facebook. La aplicación, llamemosla 'Birthday Greeting' presenta un formulario simple con un cuadro de texto donde el usuario ingresa el saludo que quiere enviar. Lo que tiene que hacer la aplicación es pedirle a facebook los contactos del usuario (llamemoslo Bruno) y mandarles el mensaje ingresado a todos aquellos que cumplen años.
+
+Ahora bien, ¿ Como hace 'Birthday Greeting' para acceder a los contactos de Bruno en facebook ?. La opción trivial sería Bruno le pase sus credenciales de facebook a 'Birthday Greeting'. No parece una buena idea cierto ? OAuth2 al rescate. 
+
+### 1.2. ¿ Que es OAuth2 ?
 
 OAuth2 es un framework que define un mecanismo seguro mediante el cual una **aplicación cliente (Client)** puede acceder a recursos que un **usuario final (Resource Owner o End-User)** posee en otro sistema **(Resource Server)**. Decimos que es seguro porque es el usuario final quien autoriza a la aplicación cliente a acceder a sus recursos alojados en el resource server. 
 
@@ -18,10 +24,11 @@ Es decir, el usuario presenta sus credenciales al servidor de autorizaciòn y es
 
 La ventaja de usar un servidor de autorización es que el usuario final en ningún momento necesita brindar sus credenciales a la aplicación cliente.
 
-### 1.2. ¿ Como funciona ?
+### 1.3. ¿ Como funciona ?
 
-El escenario descrito hasta aquí lo podemos instanciar de la siguiente manera:
-- **Client:** Birthday Greeting - Una aplicación web que manda saludos de cumpleaños a tus contactos de facebook.
+Volvamos al modelo planteado al inicio. Encontramos los siguiente participantes:
+
+- **Client:** Birthday Greeting - Una aplicación web que envía saludos de cumpleaños a tus contactos de facebook.
 - **Resource Server:** Facebook - Brinda recursos del usuario (sus contactos en este caso).
 - **Authorization Server:** Facebook - Aquí el usuario se autentica y autoriza a Birthday Greeting a acceder a sus contactos.
 - **Resource Owner:** Bruno - Usuario final que quiera usar los servicios de Birthday Greeting.
@@ -34,7 +41,7 @@ Este token de accesso es la llave que usará 'Birthday Greeting' para pedirle a 
 
 Esto signfica que OAuth2 es un protocolo de Autorización y NO de Autenticación.
 
-### 1.3. ¿ Y que hay de Open ID Connect ?
+### 1.4. ¿ Y que hay de Open ID Connect ?
 
 Muchas veces la aplicación Cliente necesita autenticar al usuario final en su sistema, es decir, necesita concer su identidad y mantener una sesión con el mismo (típicamenete mandando una cookie al user-agent que sirva de session id). Se quiere que el usuario final opere sobre la apliación cliente como un usuario propio ella, pero sin que esta tenga que manejar su autenticación, ni nada de lo que eso conlleva como formularios de registro, de login, almacenar contraseñas y demás.
 
@@ -77,10 +84,10 @@ El cliente encuentra que el usuario no tiene sesión y entonces redirije a la ur
    ```http
    HTTP/1.1 302 Found
    Location: https://www.facebook.com/v2.8/dialog/oauth?
-					response_type=code
-					&client_id=greeting-id
-					&state=xyz
-					&redirect_uri=https://www.birthday.greeting.com/login/oauth2/code/daut 
+			response_type=code
+			&client_id=greeting-id
+			&state=xyz
+			&redirect_uri=https://www.birthday.greeting.com/login/oauth2/code/daut 
    ```
    
    El parametro **redirect_uri** funciona como un callback que el servidor de autorización usará en el paso siguiente.
@@ -128,7 +135,10 @@ El servidor de autorización verifica que todos los datos de la petición sean v
      "expires_in":3600,
      "refresh_token":"tGzv3JOkF0XG5Qx2TlKWIA",
      "example_parameter":"example_value"
-     "id_token": "tGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIA"
+     "id_token":"tGzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAt
+                 Gzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtG
+                 Gzv3JOkF0XG5Qx2TlKWIAtGzv3JOkF0XG5Qx2TlKWIAtG
+                 zv3JOkF0XG5Qx2TlKWIAFSdfddsfDDFSdfdSDFSFDdeer"
    }
    ```
    
