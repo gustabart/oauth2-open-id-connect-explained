@@ -5,20 +5,20 @@
 Este documento busca describir de forma clara y precisa que es y como funciona OAuth2 y su extensión Open ID Connect. Pero de ninguna manera pretende ser una descipción pormenorizada y completa de los mismos. Para ello se debe recurrir a las especificaciones oficiales y/o demás referencias que se anexan al final de este documento.
 
 **Tabla de contentidos:**
-1. [Introducción](#1.-introducción)  
-   1.1. [Motivación](#1.1-motivación)  
-   1.2. [¿Que es OAuth2?](#1.2.-¿que-es-oauth2?)  
-   1.3. [¿Como funciona?](#1.3.-¿como-funciona?)  
-2. [Flujos](#2.-flujos)  
-   2.1. [Authorization Code Flow](#2.1.-authorization-code-flow)  
-   2.2. [Implicit](#2.2.-implicit)  
-   2.3. [Resource Owner password credentials](#2.3.-resource-owner-password-credentials)  
-   2.4. [Client Credentials](#2.4.-client-credentials)  
-3. [Access Token](#3.-access-token)  
-4. [ID Token](#4.-id-token)  
-5. [OAuth2 como SSO](#5.-oauth2-como-sso)  
-6. [Miscelanias](#6.-miscelanias)  
-7. [Referencias](#7.-referencias)  
+1. [Introducción](#1-introducción)  
+   1.1. [Motivación](#11-motivación)  
+   1.2. [¿Que es OAuth2?](#12-¿que-es-oauth2?)  
+   1.3. [¿Como funciona?](#13-¿como-funciona?)  
+2. [Flujos](#2-flujos)  
+   2.1. [Authorization Code Flow](#21-authorization-code-flow)  
+   2.2. [Implicit](#22-implicit)  
+   2.3. [Resource Owner password credentials](#23-resource-owner-password-credentials)  
+   2.4. [Client Credentials](#24-client-credentials)  
+3. [Access Token](#3-access-token)  
+4. [ID Token](#4-id-token)  
+5. [OAuth2 como SSO](#5-oauth2-como-sso)  
+6. [Miscelanias](#6-miscelanias)  
+7. [Referencias](#7-referencias)  
 
 ## 1. Introducción:
 
