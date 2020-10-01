@@ -10,9 +10,9 @@ Este documento busca describir de forma clara y precisa que es y como funciona O
 
 ### 1.1. Motivación
 
-Plantiemos el siguiente escenario. Supongamos que queremos desarrollar una aplicación web que envía saludos de cumpleaños a tus contactos de facebook. La aplicación, llamemosla 'Birthday Greeting' presenta un formulario simple con un cuadro de texto donde el usuario ingresa el saludo que quiere enviar. Lo que tiene que hacer la aplicación es pedirle a facebook los contactos del usuario (llamemoslo Bruno) y mandarles el mensaje ingresado a todos aquellos que cumplen años.
+Se plantea el siguiente escenario. Supongamos que queremos desarrollar una aplicación web que envía saludos de cumpleaños a tus contactos de facebook. La aplicación, llamemosla 'Birthday Greeting', presenta un formulario simple con un cuadro de texto donde el usuario ingresa el saludo que quiere enviar. Lo que tiene que hacer la aplicación es pedirle a facebook los contactos del usuario (llamemoslo Bruno) y mandarles el mensaje ingresado a todos aquellos que cumplan años.
 
-Ahora bien, ¿ Como hace 'Birthday Greeting' para acceder a los contactos de Bruno en facebook ?. La opción trivial sería Bruno le pase sus credenciales de facebook a 'Birthday Greeting'. No parece una buena idea cierto ? OAuth2 al rescate. 
+Ahora bien, ¿ Como hace 'Birthday Greeting' para acceder a los contactos de Bruno en facebook ?. La opción trivial sería que Bruno le pase sus credenciales de facebook a 'Birthday Greeting'. No parece una buena idea cierto ? OAuth2 al rescate. 
 
 ### 1.2. ¿ Que es OAuth2 ?
 
