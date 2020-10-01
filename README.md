@@ -2,7 +2,7 @@
 
 Este documento busca describir de forma clara y precisa que es y como funciona OAuth2 y su extensión Open ID Connect. Pero de ninguna manera pretende ser una descipción pormenorizada y completa de los mismos. Para ello se debe recurrir a las especificaciones oficiales y/o demás referencias que se anexan al final.
 
-**Tabla de contentidos:**
+**Tabla de contenidos:**
 1. [Introducción](#1-introducción)  
    1.1. [Motivación](#11-motivación)  
    1.2. [¿Que es OAuth2?](#12-que-es-oauth2)  
@@ -42,7 +42,7 @@ Volvamos al modelo planteado al inicio. Encontramos los siguiente participantes:
 - **Client:** Birthday Greeting - Una aplicación web que envía saludos de cumpleaños a tus contactos de facebook.
 - **Resource Server:** Facebook - Brinda recursos del usuario (sus contactos en este caso).
 - **Authorization Server:** Facebook - Aquí el usuario se autentica y autoriza a Birthday Greeting a acceder a sus contactos.
-- **Resource Owner:** Bruno - Usuario final que quiera usar los servicios de Birthday Greeting.
+- **Resource Owner:** Bruno - Usuario final que quiere usar los servicios de Birthday Greeting.
 
 En este escenario, cuando Bruno quiere acceder a 'Birthday Greeting', esta lo redirije mediante el user-agent a Facebook para que Bruno se autentique y preste consetimiento para que 'Birthday Greeting' acceda a sus contactos. Acto seguido Facebook intercambia mensajes con 'Birthday Greeting' para finalmente reponderle el access token.
 
@@ -54,13 +54,13 @@ Esto signfica que OAuth2 es un protocolo de Autorización y NO de Autenticación
 
 ### 1.4. ¿ Y que hay de Open ID Connect ?
 
-Muchas veces la aplicación Cliente necesita autenticar al usuario final en su sistema, es decir, necesita concer su identidad y mantener una sesión con el mismo (típicamenete mandando una cookie al user-agent que sirva de session id). Se quiere que el usuario final opere sobre la apliación cliente como un usuario propio ella, pero sin que esta tenga que manejar su autenticación, ni nada de lo que eso conlleva como formularios de registro, de login, almacenar contraseñas y demás.
+Muchas veces la aplicación Cliente necesita autenticar al usuario final en su sistema, es decir, necesita concer su identidad y mantener una sesión con el mismo (típicamenete mandando una cookie al user-agent que sirva de session id). Se quiere que el usuario final opere sobre la aplicación cliente como un usuario propio de ella, pero sin que esta tenga que manejar su autenticación, ni nada de lo que eso conlleva como formularios de registro, de login, almacenar contraseñas y demás.
 
-En este escenario tambièn se puede aplicar OAuth2 ya que justamente permite al cliente DELEGAR el login en otro sistema. Pero falta algo, ahora el Cliente no sólo necesita un token de acceso sino que además necesita conocer la identidad del usuario como ser su nombre, login, email, roles y demás datos.
+En este escenario también se puede aplicar OAuth2 ya que justamente permite al cliente **delegar el login** en otro sistema. Pero falta algo, ahora el Cliente no sólo necesita un token de acceso sino que además necesita conocer la identidad del usuario como ser su nombre, login, email, roles y demás datos.
 
 Es aquí donde aparece Open ID Connect como un protocolo que extiende a OAuth2. Básicamente adiciona dos cosas.
- - ID Token: Es un token JWT enviado por el servidor de autorización (Facebook) junto con el Access Token que sirve para identificar al usuario.
- - UserInfo Endpoint: Es un endpoint que brinda información adicional del usuario como email, roles y demás en un documento JSON.
+ - **ID Token:** Es un token JWT enviado por el servidor de autorización (Facebook) junto con el Access Token que sirve para identificar al usuario.
+ - **UserInfo Endpoint:** Es un endpoint que brinda información adicional del usuario como email, roles y demás datos en un documento JSON.
 
 ## 2. Flujos:
 
