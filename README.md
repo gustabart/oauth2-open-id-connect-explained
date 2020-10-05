@@ -110,7 +110,7 @@ El cliente encuentra que el usuario no tiene sesión y entonces redirije a la ur
 3. **User authenticates:**  
 El servidor de autorización recibe el authorization request y responde con un página de login. El usuario se autentica con exito y otorga consentimiento para que el cliente acceda a sus recursos (o un subconjunto de ellos).
 
-4. **Authorization Request:**  
+4. **Authorization Response:**  
 Recibido la autorización del usuario, el servidor de autorización responde con una redirección vía user-agent. La url de redirección es el redirect_uri suminstrado por el cliente en el paso anterior. Además anexa a la misma un código de autorización:
 
    ```http
